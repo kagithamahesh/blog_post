@@ -1,28 +1,22 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"your_module/config" // Adjust the import path according to your module
+    "log"
+    "your_project/config" // Import the config package
 )
 
 func main() {
-	// Initialize Redis connection
-	redisClient, err := config.ConnectRedis()
-	if err != nil {
-		log.Fatalf("Could not connect to Redis: %v", err)
-	}
+    // Initialize DB connection
+    db := config.ConnectDB()
+    if db == nil {
+        log.Fatal("Failed to connect to the database")
+    }
 
-	// Check DB connection
-	if db == nil {
-		log.Fatal("Database connection is nil")
-	}
-
-	// Error handling for route setup
-	http.HandleFunc("/your-route", yourHandler)
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatalf("Could not start server: %v", err)
-	}
-
-	log.Println("Server started on port 8080")
+    // Initialize Redis connection
+    redis := config.ConnectRedis()
+    if redis == nil {
+        log.Fatal("Failed to connect to Redis")
+    }
+    
+    // Rest of your code...
 }
