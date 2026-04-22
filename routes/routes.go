@@ -2,6 +2,7 @@ package routes
 
 import (
 	controller "BlogPost/controllers"
+	"BlogPost/middleware"
 	"BlogPost/repository"
 	"BlogPost/service"
 	"database/sql"
@@ -19,6 +20,9 @@ func SetupRoutes(r *gin.Engine, db *sql.DB) {
 
 	authController := &controller.AuthController{Service: authService}
 	articleController := &controller.ArticleController{Service: articleService}
+
+	auth := r.Group("/")
+	auth.Use(middleware.AuthMiddleware())
 
 	r.POST("/signup", authController.Signup)
 	r.POST("/login", authController.Login)
