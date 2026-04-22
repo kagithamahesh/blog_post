@@ -1,17 +1,28 @@
 package main
 
 import (
-	"BlogPost/config"
-	"BlogPost/routes"
-
-	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
+	"your_module/config" // Adjust the import path according to your module
 )
 
 func main() {
-	config.ConnectDB()
+	// Initialize Redis connection
+	redisClient, err := config.ConnectRedis()
+	if err != nil {
+		log.Fatalf("Could not connect to Redis: %v", err)
+	}
 
-	r := gin.Default()
-	routes.SetupRoutes(r, config.DB)
+	// Check DB connection
+	if db == nil {
+		log.Fatal("Database connection is nil")
+	}
 
-	r.Run(":8080")
+	// Error handling for route setup
+	http.HandleFunc("/your-route", yourHandler)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		log.Fatalf("Could not start server: %v", err)
+	}
+
+	log.Println("Server started on port 8080")
 }
